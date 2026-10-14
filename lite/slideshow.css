@@ -1,0 +1,336 @@
+/*
+ * ============================================================================
+ * |  Jellyfish (Lite) — performance-lightened variant                        |
+ * |  Upstream: https://github.com/n00bcodr/Jellyfish                          |
+ * |  Original author: n00bcodr (Copyright (C) 2025 n00bcodr)                  |
+ * |  License: DBAD Public License — see ../LICENSE.md (upstream, unchanged)   |
+ * |                                                                           |
+ * |  Lite changes (functionality preserved, rendering pressure reduced):      |
+ * |    - removes all backdrop-filter (glass) blurs -> translucent solid bg    |
+ * |    - removes decorative entry/hover animations & the infinite backdrop    |
+ * |      scroll animation (bg_scroll keeps a static-compatible module)        |
+ * |    - removes large glow box-shadows (>=20px) on hover/decorative elements |
+ * |    - narrows `transition: all` / bare shorthand to cheap, mostly          |
+ * |      GPU-friendly properties; menu/popup/header-pin feedback retained     |
+ * |    - removes will-change hints                                            |
+ * |  Original repository-root files are unchanged.                            |
+ * ============================================================================
+ */
+/*
+ * ===================================================================
+ * |                    Jellyfish Slideshow Theme                    |
+ * ===================================================================
+ *
+ */
+
+#slides-container {
+  height: 100vh !important;
+  margin-top: -2em !important;
+  font-family: 'Quicksand' !important;
+  z-index: auto !important;
+}
+
+.misc-info {
+  font-family: 'Quicksand' !important;
+}
+
+/* Animation  */
+
+/* --- Base Slide Transition (Crossfade) --- */
+.slide {
+  transition: opacity 0.4s ease !important; /* Lite: shorter crossfade */
+  z-index: auto !important;
+}
+
+/* --- Content Animation --- */
+/* Default state for all content (when slide is NOT active) */
+.slide .logo-container,
+.slide .info-container,
+.slide .genre,
+.slide .plot-container,
+.slide .button-container {
+  opacity: 0 !important;
+  transition: opacity 0.4s ease-out !important; /* Lite: blur filter transition removed */
+  z-index: 7 !important;
+}
+
+/* Active state for all content (when slide IS active) - with staggered delay */
+.slide.active .logo-container,
+.slide.active .info-container,
+.slide.active .genre,
+.slide.active .plot-container,
+.slide.active .button-container {
+  opacity: 1 !important;
+  filter: blur(0) !important;
+}
+
+/* Lite: staggered transition delays removed (no cascade effect). */
+
+.homeSectionsContainer {
+  margin-top: 0vh !important;
+}
+
+
+/* --- Backdrop & Gradient Styling --- */
+.backdrop {
+  filter: brightness(0.9) !important;
+}
+
+.backdrop-overlay {
+  background: linear-gradient(to top, rgba(16, 16, 16, 0.95) 5%, rgba(16, 16, 16, 0.5) 25%, transparent 50%) !important;
+}
+
+.gradient-overlay {
+  background: linear-gradient(to right, rgba(16, 16, 16, 0.75) 20%, transparent 50%) !important;
+}
+
+/* --- Logo Styling --- */
+.logo-container {
+  left: 5vw !important;
+  top: 20vh !important;
+  width: clamp(300px, 45vw, 700px) !important;
+  height: clamp(150px, 25vh, 350px) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  position: relative !important;
+}
+
+.logo-container:has(img[src*="Logo"]) {
+  opacity: 1 !important;
+}
+
+.logo {
+  max-width: 90% !important;
+  max-height: 90% !important;
+  object-fit: contain !important;
+  filter: drop-shadow(1px 1px 10px rgba(255, 255, 255, 0.15)) brightness(1.1) blur(0) !important;
+}
+
+
+/* --- Text & Info Styling --- */
+.info-container {
+  left: 5vw !important;
+  top: 50vh !important;
+  color: #ffffff !important;
+  font-size: clamp(0.9rem, 1.5vw, 1.3rem) !important;
+}
+
+.genre {
+  left: 5vw !important;
+  top: 57vh !important;
+  color: #cfcfcf !important;
+  font-size: clamp(0.8rem, 1.2vw, 1rem) !important;
+}
+
+.plot-container {
+  left: 5vw !important;
+  top: 63vh !important;
+  width: clamp(300px, 45vw, 700px) !important;
+  color: #cfcfcf !important;
+  font-size: clamp(0.8rem, 1.2vw, 1rem) !important;
+  line-height: 1.5 !important;
+}
+
+.separator-icon {
+  color: var(--primary-accent-color) !important;
+  font-size: clamp(9px, 0.85vw, 13px) !important;
+  margin: 0 clamp(6px, 0.6vw, 10px) !important;
+}
+
+/* --- Buttons (Restored Style) --- */
+.button-container {
+  left: 5vw !important;
+  top: 72vh !important;
+  gap: clamp(12px, 1.2vw, 24px) !important;
+}
+
+
+/* ----------- Icon buttons styling ----------- */
+
+.play-button,
+.detail-button,
+.favorite-button,
+.slide .watchlist-button {
+  color: #ffffff !important;
+  transition: background-color 0.2s ease !important;
+}
+
+.detail-button,
+.favorite-button,
+.slide .watchlist-button {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Hide Favorite button if Watchlist button is present */
+.button-container:has(.watchlist-button) .favorite-button {
+  display: none;
+}
+
+
+/* Different styling for playbutton */
+.play-button {
+  background-color: var(--secondary-accent-color) !important;
+  border-radius: var(--rounded-cards) !important;
+  font-size: clamp(0.9rem, 1.3vw, 1.2rem) !important;
+}
+
+
+/* Hover Effects */
+.play-button:hover {
+  background-color: var(--primary-accent-color) !important;
+  color: var(--text-color) !important;
+}
+
+.detail-button:hover {
+  background-color: #fff !important;
+  color: #000 !important;
+
+}
+
+.favorite-button:hover {
+  background-color: #fff !important;
+  color: #ff0000 !important;
+}
+
+.slide .watchlist-button:hover {
+  background-color: #fff !important;
+  color: rgb(34, 197, 94) !important;
+}
+
+/* --- Navigation --- */
+.arrow {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  border-radius: 50% !important;
+  transition: background-color 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.arrow:hover {
+  background-color: var(--primary-accent-color) !important;
+}
+
+.dots-container {
+  display: none !important;
+}
+
+/* --- Tablet & iPad Layout Fixes --- */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+
+  /* Landscape */
+  .logo-container {
+    width: clamp(280px, 42vw, 650px) !important;
+    height: clamp(140px, 22vh, 300px) !important;
+    top: 20vh !important;
+  }
+
+  .info-container {
+    top: 50vh !important;
+  }
+
+  .genre {
+    top: 56vh !important;
+  }
+
+  .plot-container {
+    top: 63vh !important;
+    width: clamp(300px, 45vw, 650px) !important;
+  }
+
+  .button-container {
+    top: 74vh !important;
+  }
+
+  /* Portrait */
+  @media (orientation: portrait) {
+    .gradient-overlay {
+      background: linear-gradient(to top, rgba(16, 16, 16, .75) 20%, transparent 50%) !important;
+    }
+
+    .logo-container {
+      width: clamp(250px, 55vw, 500px) !important;
+      height: clamp(120px, 18vh, 250px) !important;
+      top: 25vh !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+    }
+
+    .info-container,
+    .genre,
+    .plot-container,
+    .button-container {
+      width: clamp(300px, 80vw, 600px) !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      text-align: center !important;
+      justify-content: center !important;
+    }
+
+    .info-container {
+      top: 50vh !important;
+    }
+
+    .genre {
+      top: 58vh !important;
+    }
+
+    .plot-container {
+      top: 64vh !important;
+    }
+
+    .button-container {
+      top: 72vh !important;
+    }
+  }
+}
+
+
+/* --- Mobile Layout Fixes --- */
+@media only screen and (max-width: 767px) and (orientation: portrait) {
+  .gradient-overlay {
+    background: linear-gradient(to top, rgba(16, 16, 16, .75) 20%, transparent 50%) !important;
+  }
+
+  .logo-container {
+    width: clamp(200px, 75vw, 400px) !important;
+    height: clamp(100px, 18vh, 200px) !important;
+    top: 25vh !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    justify-content: center !important;
+  }
+
+  .info-container,
+  .genre,
+  .button-container,
+  .plot-container {
+    width: clamp(280px, 85vw, 500px) !important;
+    text-align: center !important;
+    justify-content: center !important;
+    font-size: clamp(0.85rem, 3.5vw, 1.1rem) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .info-container {
+    top: 55vh !important;
+  }
+
+  .genre {
+    top: 60vh !important;
+  }
+
+  .plot-container {
+    display: none !important;
+  }
+}
+
+/* Move Pause Button to Bottom */
+.pause-button,
+.mute-button {
+  top: auto !important;
+  bottom: 10rem !important;
+  z-index: 10 !important;
+}

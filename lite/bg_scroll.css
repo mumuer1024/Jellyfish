@@ -1,0 +1,12 @@
+/*
+ * Jellyfish (Lite) — static-compatible module.
+ * Upstream: https://github.com/n00bcodr/Jellyfish (n00bcodr, DBAD license).
+ *
+ * The original bg_scroll.css animated the full-screen backdrop forever
+ * (`backgroundScroll 50s linear infinite` on background-position), which
+ * repaints the backdrop every frame. The Lite variant keeps the enlarged
+ * backdrop crop but renders it statically — identical look, zero cost.
+ */
+.backdropImage {
+  background-size: 115% !important;
+}

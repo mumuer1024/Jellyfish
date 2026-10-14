@@ -1,0 +1,95 @@
+/*
+ * ============================================================================
+ * | Jellyfish (Lite) — Logo remix: mode switch + variables (Round 3)          |
+ * | Upstream theme: Jellyfish by n00bcodr (DBAD license)                      |
+ * | https://github.com/n00bcodr/Jellyfish                                     |
+ * ============================================================================
+ *
+ * WHAT THIS FILE IS
+ *   Variables only — no element rules. The rules that consume these variables
+ *   live in the override block at the END of lite/theme.css (imported
+ *   stylesheets are processed before the importing file's own rules, so
+ *   element rules cannot win the cascade from here).
+ *
+ * HOW THE UPSTREAM LOGO WORKS (implementation report)
+ *   The logo is a PNG IMAGE loaded through the `--logo` variable that every
+ *   colors/*.css defines (jellyfish.png in 14 of 15 schemes, streamberry.png
+ *   in jellyflix.css). It is consumed at three surfaces:
+ *     1. .pageTitleWithDefaultLogo              header / page-title logo
+ *     2. #loginPage h1::before                  login page logo
+ *     3. .MuiToolbar-root ... .MuiButton-startIcon::before
+ *                                                Jellyfin 12+ top-bar logo
+ *   The item detail-page logo uses the item's own artwork and is untouched.
+ *
+ * THE LITE REMIX MECHANISM (mask-image, single colour, no JS, no animation)
+ *   Each logo surface renders one of two layers:
+ *     - base layer: original PNG, driven by --logo-base-image — used by the
+ *       jellyfish / streamberry modes; never reads the active colors/*.css
+ *       --logo, so the logo is fully decoupled from the colour scheme;
+ *     - overlay layer (pseudo-element, absolute, pointer-events:none):
+ *       paints --logo-remix-color clipped by the user-drawn SVG
+ *       (--logo-mask-source) used as a mask-image.
+ *   In Nico Remix mode the base layer is `none` (--logo-base-image: none), so
+ *   ONLY the theme-coloured SVG mask is displayed — the original PNG is fully
+ *   hidden and cannot show through (no "double logo" / overprint), which was
+ *   the reported defect when the PNG stayed visible behind a line-art mask.
+ *   In the jellyfish / streamberry modes the mask is `none` and the colour is
+ *   transparent, so only the PNG base is displayed.
+ *
+ * FALLBACK (read this)
+ *   A mask-image that fails to load HIDES the element it applies to (current
+ *   CSS Masking behaviour — w3c/fxtf-drafts #130, June 2024). Pure CSS cannot
+ *   detect whether a mask loaded, so "hide the PNG while the SVG works" and
+ *   "show the PNG automatically when the SVG is missing" are mutually
+ *   exclusive. Remix mode chooses correct display: the PNG is hidden and, if
+ *   the SVG is ever unavailable (404), the logo area is empty until the file
+ *   is restored or the mode is switched. Manual fallback = switch to a PNG
+ *   mode (one of the blocks below). If you prefer the automatic PNG fallback
+ *   instead — accepting that a mask whose shape does not cover the whole PNG
+ *   lets the PNG show through its transparent areas — set
+ *   --logo-base-image: url("../logos/jellyfish.png") in remix mode.
+ *   Escape hatch for a deviant browser that renders a failed mask as unmasked
+ *   (solid colour rectangle): set --logo-remix-color: transparent.
+ *
+ * PATHS
+ *   All URLs below are relative to this lite/ directory and resolve the same
+ *   whether the browser bases them on this file or on lite/theme.css:
+ *     logos/jellyfish-remixed.svg   → lite/logos/jellyfish-remixed.svg
+ *     ../logos/jellyfish.png        → <repo>/logos/jellyfish.png
+ *     ../logos/streamberry.png      → <repo>/logos/streamberry.png
+ *
+ *   ⚠️ PLACEMENT: the remixed SVG MUST live at lite/logos/jellyfish-remixed.svg
+ *   — NOT at the repo-root logos/ directory (that upstream dir holds the
+ *   original PNGs only). Relative URLs in custom property values resolve
+ *   against the stylesheet where the variable is declared, i.e. this lite/
+ *   directory, so url("logos/…") maps to lite/logos/…. A file placed in the
+ *   repo-root logos/ dir will 404, the mask will fail and (in remix mode) the
+ *   logo area will be empty.
+ */
+
+:root {
+    /* =====================================================================
+       LOGO MODE — default is Nico Remix (user SVG as mask + theme colour,
+       PNG hidden). To switch mode, replace the three lines below with one of
+       the ready blocks at the bottom of this file. No other edit is needed.
+       ===================================================================== */
+    --logo-base-image: none;                                   /* hide PNG in remix mode */
+    --logo-mask-source: url("logos/jellyfish-remixed.svg");    /* user SVG, mask */
+    --logo-remix-color: var(--primary-accent-color);           /* theme colour   */
+}
+
+/* -------------------------------------------------------------------------
+   MODE: original Jellyfish PNG — replace the three :root lines above with:
+
+   --logo-base-image: url("../logos/jellyfish.png");
+   --logo-mask-source: none;
+   --logo-remix-color: transparent;
+   ------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------
+   MODE: Streamberry PNG — replace the three :root lines above with:
+
+   --logo-base-image: url("../logos/streamberry.png");
+   --logo-mask-source: none;
+   --logo-remix-color: transparent;
+   ------------------------------------------------------------------------- */

@@ -1,0 +1,234 @@
+/*
+ * ============================================================================
+ * |  Jellyfish (Lite) — performance-lightened variant                        |
+ * |  Upstream: https://github.com/n00bcodr/Jellyfish                          |
+ * |  Original author: n00bcodr (Copyright (C) 2025 n00bcodr)                  |
+ * |  License: DBAD Public License — see ../LICENSE.md (upstream, unchanged)   |
+ * |                                                                           |
+ * |  Lite changes (functionality preserved, rendering pressure reduced):      |
+ * |    - removes all backdrop-filter (glass) blurs -> translucent solid bg    |
+ * |    - removes decorative entry/hover animations & the infinite backdrop    |
+ * |      scroll animation (bg_scroll keeps a static-compatible module)        |
+ * |    - removes large glow box-shadows (>=20px) on hover/decorative elements |
+ * |    - narrows `transition: all` / bare shorthand to cheap, mostly          |
+ * |      GPU-friendly properties; menu/popup/header-pin feedback retained     |
+ * |    - removes will-change hints                                            |
+ * |  Original repository-root files are unchanged.                            |
+ * ============================================================================
+ */
+/* I don't like or use favourites bar, this hides it */
+.noHomeButtonHeader .emby-tab-button[data-index="1"] {
+  display: none !important;
+}
+a:has([data-testid="FavoriteIcon"]) { display: none !important; }
+
+/* Hide item names on mobile */
+.layout-mobile .detailLogo:not(.hide)~.detailPageWrapperContainer .nameContainer h1 {
+    display: none;
+}
+
+/* High DPI */
+
+/* Adjustments for 2K monitors (e.g., 2000px width and above) */
+@media (min-width: 2000px) {
+  .playedIndicator, .indicator, .mediaSourceIndicator {
+    width: 40px;
+    height: 40px;
+    font-size: 120%;
+  }
+  .cardText-first {
+    font-size: 1.2em;
+  }
+  .cardText-secondary {
+    font-size: 1.1em;
+  }
+  .layout-desktop #castContent .card.overflowPortraitCard,
+  .layout-desktop #guestCastContent .card.overflowPortraitCard {
+    width: 15em !important;
+  }
+  .headerButton .material-icons {
+    font-size: 2em !important;
+  }
+  .emby-tab-button {
+    height: 40px !important;
+  }
+  .layout-desktop .headerTabs {
+    font-size: 18px !important;
+  }
+  .layout-desktop .headerRight {
+    height: 4em !important;
+  }
+  .headerUserButtonRound div {
+    width: 25px !important;
+    height: 25px !important;
+  }
+}
+
+
+/*
+================================================================================
+|                          Video Player OSD                                    |
+================================================================================
+*/
+
+.layout-mobile {
+
+  .videoOsdBottom .osdControls [dir="ltr"] .paper-icon-button-light {
+    position: fixed;
+    top: 49vh;
+    left: 30vw;
+    font-size: 2vw;
+    transform: translateX(-50%) translateY(-50%);
+    background: var(--primary-background-transparent);
+
+  }
+
+  .videoOsdBottom .btnPreviousTrack:hover,
+  .videoOsdBottom .btnPreviousChapter:hover,
+  .videoOsdBottom .btnRewind:hover,
+  .videoOsdBottom .btnPause:hover,
+  .videoOsdBottom .btnFastForward:hover,
+  .videoOsdBottom .btnNextChapter:hover,
+  .videoOsdBottom .btnNextTrack:hover {
+    font-size: 2.2vw !important;
+    background: var(--secondary-background-transparent) !important;
+
+  }
+
+  @media (max-width: 33.75em) {
+    .videoOsdBottom .paper-icon-button-light {
+      font-size: 3vw !important;
+    }
+
+    .videoOsdBottom .btnPreviousTrack:hover,
+    .videoOsdBottom .btnPreviousChapter:hover,
+    .videoOsdBottom .btnRewind:hover,
+    .videoOsdBottom .btnPause:hover,
+    .videoOsdBottom .btnFastForward:hover,
+    .videoOsdBottom .btnNextChapter:hover,
+    .videoOsdBottom .btnNextTrack:hover {
+      font-size: 3.2vw !important;
+      background: var(--secondary-background-transparent) !important;
+
+    }
+  }
+
+  .osdControls .btnPreviousTrack {
+    left: 20% !important;
+    filter: drop-shadow(-3px 0px 2px rgba(2, 2, 2, 0.8));
+  }
+
+  .osdControls .btnPreviousChapter {
+    left: 30% !important;
+    filter: drop-shadow(-3px 0px 2px rgba(2, 2, 2, 0.8));
+  }
+
+  .osdControls .btnRewind {
+    left: 40% !important;
+    filter: drop-shadow(-3px 0px 2px rgba(2, 2, 2, 0.8));
+  }
+
+  .osdControls .btnPause {
+    left: 50% !important;
+    filter: drop-shadow(0px 0px 3px rgba(2, 2, 2, 0.8));
+  }
+
+  .osdControls .btnFastForward {
+    left: 60% !important;
+    filter: drop-shadow(3px 0px 2px rgba(2, 2, 2, 0.8));
+  }
+
+  .osdControls .btnNextChapter {
+    left: 70% !important;
+    filter: drop-shadow(3px 0px 2px rgba(2, 2, 2, 0.8));
+  }
+
+  .osdControls .btnNextTrack {
+    left: 80% !important;
+    filter: drop-shadow(3px 0px 2px rgba(2, 2, 2, 0.8));
+  }
+
+  .osdTimeText {
+    margin-left: 2.4em;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .videoOsdBottom .paper-icon-button-light:hover:not(:disabled) {
+      background-color: #0009 !important;
+    }
+  }
+}
+
+/* ----------------------------------------------------------- */
+
+/* Card playbutton styling */
+.cardOverlayContainer>.cardOverlayFab-primary {
+    background-color: var(--primary-accent-color) !important;
+    color: var(--text-color) !important;
+    font-size: 80% !important;
+    z-index: 2;
+}
+
+/* Lite: backdrop blurs on card hover removed (biggest repaint trigger when the
+   pointer sweeps across poster grids). */
+
+
+/* Banners on Collections */
+.verticalSection .cardImageContainer::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 25%;
+  max-width: 10em;
+  aspect-ratio: 1/1;
+  pointer-events: none;
+  z-index: 6;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.verticalSection.OSCARS .cardImageContainer::after {
+  background-image: url('https://cdn.jsdelivr.net/gh/jackkerouac/aphrodite@main/images/awards/yellow/oscars.png');
+}
+
+.verticalSection.IMDB_250 .cardImageContainer::after {
+  background-image: url('https://cdn.jsdelivr.net/gh/jackkerouac/aphrodite@main/images/awards/yellow/imdb.png');
+}
+
+
+button.headerButton.headerHomeButton.barsMenuButton.headerButtonLeft.paper-icon-button-light {
+    order: -1;
+}
+
+button.headerButton.headerButtonLeft.headerBackButton.paper-icon-button-light {
+    order: -2;
+}
+button.headerButton.mainDrawerButton.barsMenuButton.headerButtonLeft.paper-icon-button-light {
+  order: -3;
+}
+
+/* Smaller loading spinner */
+.docspinner {
+    position: fixed;
+    top: 2em;
+    width: 3em;
+    height: 3em;
+    margin: 0;
+    pointer-events: none;
+    margin-left: -1.5em;
+}
+
+
+#indexPage .section0 .sectionTitle {
+    display: none;
+}
+
+#indexPage .section0 {
+    padding-top: 1em;
+}
+
+#indexPage .verticalSection.section0 {
+    padding-top: 3em;
+}
