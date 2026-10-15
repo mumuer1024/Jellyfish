@@ -90,7 +90,7 @@ That's it! The main Lite theme, default color scheme, and included styles are lo
 
 For individual user settings, alternative colors, logo modes, and optional components, see the detailed documentation.
 
-> **Version note:** The URL above follows the latest `main` branch. For a stable installation, use a tagged release when one becomes available.
+> **Version note:** The URL above follows the latest `main` branch. The repository already has an old tag `1.0`, but it predates Jellyfish Lite and does **not** contain the `lite/` files — do **not** pin Lite to `@1.0` (its `lite/*` paths 404). A Lite-specific tag will be added with a future release; until then, stay on `@main`.
 
 ## Customization
 

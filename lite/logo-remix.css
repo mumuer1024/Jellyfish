@@ -37,34 +37,51 @@
  *   transparent, so only the PNG base is displayed.
  *
  * FALLBACK (read this)
- *   A mask-image that fails to load HIDES the element it applies to (current
- *   CSS Masking behaviour — w3c/fxtf-drafts #130, June 2024). Pure CSS cannot
- *   detect whether a mask loaded, so "hide the PNG while the SVG works" and
- *   "show the PNG automatically when the SVG is missing" are mutually
- *   exclusive. Remix mode chooses correct display: the PNG is hidden and, if
- *   the SVG is ever unavailable (404), the logo area is empty until the file
- *   is restored or the mode is switched. Manual fallback = switch to a PNG
- *   mode (one of the blocks below). If you prefer the automatic PNG fallback
- *   instead — accepting that a mask whose shape does not cover the whole PNG
- *   lets the PNG show through its transparent areas — set
- *   --logo-base-image: url("../logos/jellyfish.png") in remix mode.
- *   Escape hatch for a deviant browser that renders a failed mask as unmasked
- *   (solid colour rectangle): set --logo-remix-color: transparent.
+ *   Two distinct "no SVG" cases behave differently:
+ *     - the mask URL 404s (file missing): a failing mask-image hides the
+ *       element it applies to (current CSS Masking behaviour —
+ *       w3c/fxtf-drafts #130, June 2024). Pure CSS cannot detect whether a
+ *       mask loaded, so "hide the PNG while the SVG works" and "show the PNG
+ *       automatically when the SVG is missing" are mutually exclusive. Remix
+ *       mode chooses correct display: the PNG is hidden and, if the SVG is
+ *       ever unavailable (404), the logo area is empty until the file is
+ *       restored or the mode is switched. Manual fallback = switch to a PNG
+ *       mode (one of the blocks below).
+ *     - --logo-mask-source computes to none (unset, or explicitly set to
+ *       none) while --logo-remix-color is an opaque colour: the overlay has
+ *       NO mask, so it renders as an unclipped SOLID RECTANGLE covering the
+ *       whole logo area. This is standard behaviour, not a browser quirk.
+ *       Fix: set --logo-remix-color: transparent AND switch to a PNG mode.
+ *   If you prefer the automatic PNG fallback instead — accepting that a mask
+ *   whose shape does not cover the whole PNG lets the PNG show through its
+ *   transparent areas — set --logo-base-image: url("../logos/jellyfish.png")
+ *   in remix mode.
  *
  * PATHS
- *   All URLs below are relative to this lite/ directory and resolve the same
- *   whether the browser bases them on this file or on lite/theme.css:
+ *   The URLs below are relative to the lite/ directory. Per the CSS spec, a
+ *   relative url() inside a custom-property value is NOT resolved at
+ *   declaration time — it is resolved when the property is substituted via
+ *   var() in a normal property, against the stylesheet that USES it (i.e.
+ *   lite/theme.css, where the consuming element rules live):
  *     logos/jellyfish-remixed.svg   → lite/logos/jellyfish-remixed.svg
  *     ../logos/jellyfish.png        → <repo>/logos/jellyfish.png
  *     ../logos/streamberry.png      → <repo>/logos/streamberry.png
+ *   Because logo-remix.css and theme.css sit in the same lite/ directory, the
+ *   resolution is the same whether the browser bases it on this file or on
+ *   lite/theme.css — but that is a property of them sharing a directory, not
+ *   a general rule. Do not move these declarations outside lite/ and expect
+ *   the same paths to resolve.
  *
  *   ⚠️ PLACEMENT: the remixed SVG MUST live at lite/logos/jellyfish-remixed.svg
  *   — NOT at the repo-root logos/ directory (that upstream dir holds the
- *   original PNGs only). Relative URLs in custom property values resolve
- *   against the stylesheet where the variable is declared, i.e. this lite/
- *   directory, so url("logos/…") maps to lite/logos/…. A file placed in the
- *   repo-root logos/ dir will 404, the mask will fail and (in remix mode) the
- *   logo area will be empty.
+ *   original PNGs only), otherwise the mask URL 404s and (in remix mode) the
+ *   logo area is empty.
+ *
+ *   ⚠️ USER-LEVEL OVERRIDES: do NOT paste these relative urls into Jellyfin
+ *   Custom CSS. A relative url in your own stylesheet resolves against the
+ *   Jellyfin page URL — not against the CDN stylesheet that declares the
+ *   variable — so it will almost always 404. Use absolute https:// URLs
+ *   instead; copy-paste blocks are in lite/README.md §4.
  */
 
 :root {

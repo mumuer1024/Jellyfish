@@ -2,13 +2,13 @@
 
 > **[English](./README.md) · [简体中文](./README.zh-CN.md)**
 
-> Jellyfish Lite 是 [Jellyfish 主题](https://github.com/n00bcodr/Jellyfish)（作者 **n00bcodr**，DBAD 许可，见仓库根 [`../LICENSE.md`](../LICENSE.md)）的**性能轻量化变体**：**功能 100% 保留**，削减动效与高开销渲染效果，目标是降低渲染压力、减少卡顿。仓库根目录的原版文件**一律未改动**——本 `lite/` 目录是独立、可完整导入的替代主题。
+> Jellyfish Lite 是 [Jellyfish 主题](https://github.com/n00bcodr/Jellyfish)（作者 **n00bcodr**，DBAD 许可，见仓库根 [`../LICENSE.md`](../LICENSE.md)）的**性能轻量化变体**：**尽可能保留功能行为**，削减装饰性动效与高开销渲染效果，目标是降低渲染压力、减少卡顿。仓库根目录的原版文件**一律未改动**——本 `lite/` 目录是独立、可完整导入的替代主题。
 
 ---
 
 ## 1. 简介
 
-Jellyfish Lite 保留原版主题的全部功能（布局、配色、字体、交互、插件适配），只移除或收窄消耗渲染性能的部分：
+Jellyfish Lite 尽可能保留原版主题的功能（布局、配色、字体、交互、插件适配），只移除或收窄消耗渲染性能的装饰性部分：
 
 - **移除**全部 `backdrop-filter` 玻璃拟态模糊 → 半透明纯色背景；
 - **移除**常驻/无限动画（含全屏背景滚动）与入场、悬停装饰动画；
@@ -29,39 +29,43 @@ Jellyfish Lite 保留原版主题的全部功能（布局、配色、字体、�
 @import url("https://cdn.jsdelivr.net/gh/mumuer1024/Jellyfish@main/lite/theme.css");
 ```
 
-> ⚠️ **可用性**：本 Fork 尚未发布——`lite/` 文件尚未推送，**在仓库公开并推送前**上述 CDN URL 会 404。本地测试请用任意静态服务器（如仓库根目录执行 `python3 -m http.server`），导入形如 `http://<主机>:8000/lite/theme.css` 的地址。（jsDelivr 的 `gh` 代理会服务任意**公开**仓库、无需 Release；仓库公开后即可使用。）
+`@main` 为当前推荐的**浮动版本入口**：它始终跟随仓库 `main` 分支的最新内容（每次推送都会更新），**并非固定版本**。`lite/` 文件已随 `main` 分支发布并可正常访问。
 
-请保持仓库目录结构完整——所有内部 `@import`（字体、图标、登录页、默认配色、icontext、彩色分级、Logo remix）均为**相对路径**，随入口文件同源解析。不要把 `lite/theme.css` 单独拷走使用；它需要 `fonts/`、`colors/`、`logos/`、`lite/` 等目录在周围。
+> **CDN 用户** —— 这一行 `@import` 即全部所需。主主题、默认配色及已集成样式都通过它加载。下面所有配置（配色切换、Logo 模式、可选组件）都只需在同一个 **自定义 CSS 代码** 框中追加内容，无需访问仓库。
+>
+> **自行托管用户** —— 把仓库克隆/复制到自己的静态服务器，从自己的域名导入 `lite/theme.css`。请保持目录结构完整——所有内部 `@import`（字体、图标、登录页、默认配色、icontext、彩色分级、Logo remix）均为**相对路径**，随入口文件同源解析。不要把 `lite/theme.css` 单独拷走使用；它需要 `fonts/`、`colors/`、`logos/`、`lite/` 等目录在周围。
+
+> ⚠️ **版本固定说明：** 仓库已有一个旧 Tag `1.0`，但它早于 Jellyfish Lite，**不包含 `lite/` 文件**——请勿使用 `@1.0`（其 `lite/*` 路径会 404）。在发布 Lite 专属 Tag 之前，请继续使用 `@main`。
 
 唯一的外部依赖是 Druidblack 的元数据图标 CDN，与原版主题一致（未改动）。
 
 ## 3. 配色说明与切换
 
-原版 15 套配色**全部原样保留、未改动**（`colors/*.css`，纯 `:root` CSS 变量，无任何效果）：
+原版 15 套配色**全部原样保留、未改动**（`colors/*.css`，以纯 `:root` CSS 变量为主，个别配色还引用背景图 URL）：
 
 `aurora` · `banana` · `coal` · `coral` · `forest` · `grass` · `jellyblue` · `jellyflix` · `jellypurple` · `lavender` · `midnight` · `mint` · `ocean` · `peach` · `watermelon`
 
 - **默认配色**：`jellyblue`（由 `lite/theme.css` 中的导入行决定）。
 - 切换配色只替换 CSS 变量——**`lite/theme.css` 永不会被重新导入**，已优化的性能始终生效。
 
-### 3.1 全局（服务器）切换
+### 3.1 推荐：在自定义 CSS 中切换配色（所有用户通用）
 
-编辑 `lite/theme.css` 中的配色 `@import` 行：
+先导入 `lite/theme.css`，**再**追加一行目标配色——后导入的 `:root` 变量生效。此方法在 **控制台 → 常规 → 自定义 CSS 代码**（全局）与 **用户设置 → Display → 自定义 CSS 代码**（单用户）中都适用，无需访问仓库：
+
+```css
+@import url("https://cdn.jsdelivr.net/gh/mumuer1024/Jellyfish@main/lite/theme.css");
+@import url("https://cdn.jsdelivr.net/gh/mumuer1024/Jellyfish@main/colors/peach.css"); /* 本服务器/设备用 Peach */
+```
+
+（自行托管？把 URL 换成你自己的静态服务器路径即可。）
+
+### 3.2 仅自行托管：修改全局默认配色
+
+自行托管仓库时，也可以直接编辑 `lite/theme.css` 中的配色 `@import` 行来改变全局默认配色：
 
 ```css
 @import url("../colors/ocean.css");   /* 全局默认改为 Ocean */
 ```
-
-### 3.2 单用户（Display 设置）切换
-
-先导入 `lite/theme.css`，**再**追加一行目标配色（后导入的 `:root` 变量生效）：
-
-```css
-@import url("https://cdn.jsdelivr.net/gh/mumuer1024/Jellyfish@main/lite/theme.css");
-@import url("https://cdn.jsdelivr.net/gh/mumuer1024/Jellyfish@main/colors/peach.css"); /* 该设备用 Peach */
-```
-
-（自托管？把 URL 换成你自己的静态服务器路径即可。）
 
 ### 3.3 动态切换（脚本）
 
@@ -78,46 +82,57 @@ Logo 是 **PNG 图片**，通过每个 `colors/*.css` 定义的 `--logo` 变量�
 
 Lite 增加两层机制：**底层**（原版 PNG，由 `--logo-base-image` 驱动）与**叠加层**（伪元素，以 `--logo-remix-color` 填充、由你的 SVG 作 `mask-image` 裁剪）。变量定义在 `lite/logo-remix.css`，元素规则在 `lite/theme.css` 末尾。
 
-> **没有配置界面**——切换模式 = 编辑 `lite/logo-remix.css` 顶部的三个 `:root` 变量（文件底部提供了三种模式的可复制块）。
+### 切换模式——用户级 CSS 覆盖（推荐，所有用户通用）
 
-### 三种模式
+**没有配置界面**。Logo 由三个 `:root` 变量控制，你可以在同一个 **自定义 CSS 代码** 框中覆盖它们——这是推荐方法，也是 CDN 用户唯一可行的方法（`lite/` 文件在 CDN 上，无法编辑）。
 
-用以下任一组替换 `lite/logo-remix.css` 顶部的三行 `:root` 变量：
+> ⚠️ **在你自己的 Custom CSS 中请使用绝对 HTTPS URL。** 你写在 Jellyfin 自定义 CSS 里的相对 `url()` 会相对 **Jellyfin 页面 URL** 解析（而非 CDN 样式表），几乎必然 404。请直接复制下方任一代码块。
 
 **A. Nico Remix（默认）**——纯主题色剪影，原版 PNG 隐藏（无双重 Logo）：
 
 ```css
---logo-base-image: none;
---logo-mask-source: url("logos/jellyfish-remixed.svg");
---logo-remix-color: var(--primary-accent-color);
+:root {
+  --logo-base-image: none;
+  --logo-mask-source: url("https://cdn.jsdelivr.net/gh/mumuer1024/Jellyfish@main/lite/logos/jellyfish-remixed.svg");
+  --logo-remix-color: var(--primary-accent-color);
+}
 ```
 
 **B. 原版 Jellyfish PNG**：
 
 ```css
---logo-base-image: url("../logos/jellyfish.png");
---logo-mask-source: none;
---logo-remix-color: transparent;
+:root {
+  --logo-base-image: url("https://cdn.jsdelivr.net/gh/mumuer1024/Jellyfish@main/logos/jellyfish.png");
+  --logo-mask-source: none;
+  --logo-remix-color: transparent;
+}
 ```
 
 **C. Streamberry PNG**：
 
 ```css
---logo-base-image: url("../logos/streamberry.png");
---logo-mask-source: none;
---logo-remix-color: transparent;
+:root {
+  --logo-base-image: url("https://cdn.jsdelivr.net/gh/mumuer1024/Jellyfish@main/logos/streamberry.png");
+  --logo-mask-source: none;
+  --logo-remix-color: transparent;
+}
 ```
+
+Nico Remix 即使不做任何覆盖也是默认模式，所以大多数 CDN 用户**无需**任何 Logo 覆盖。
+
+**自行托管替代方案：** 自行托管仓库时，也可以直接编辑 `lite/logo-remix.css` 顶部的三行 `:root` 变量（文件底部提供了可复制块）。此时相对路径（如 `url("../logos/jellyfish.png")`）可用，因为 `logo-remix.css` 与 `theme.css` 同处 `lite/` 目录（见下）。
 
 ### 使用你自己的 SVG（Nico Remix）
 
-- 把你的 SVG 放到 **`./logos/jellyfish-remixed.svg`**（即 `lite/logos/jellyfish-remixed.svg`）——**不是**仓库根目录的 `logos/`（那里只放原版 PNG）。自定义属性值中的相对 URL 按"定义该变量的样式表"（即 `lite/`）解析，放错目录会 404。
+- **自行托管：** 把 SVG 放到 **`./logos/jellyfish-remixed.svg`**（即 `lite/logos/jellyfish-remixed.svg`）——**不是**仓库根目录的 `logos/`（那里只放原版 PNG）。SVG 放入后**无需改任何 CSS**——Nico Remix 就是默认模式。
+- **CDN 用户：** 无法向 CDN 副本添加文件。请把 SVG 托管到任意公开位置（你自己的服务器、其它 CDN、GitHub Gist 等），再把 `--logo-mask-source` 指向其绝对 `https://` URL（上方 A 代码块，替换 URL 即可）。
 - 绘制要求：单色剪影、透明背景（mask 只取 alpha 通道——显示颜色始终来自主题）、viewBox 宽高比建议 **2.36:1**（与原版 640×271 一致）、不留透明留白、无外部引用。完整清单见 [`./logos/README.md`](./logos/README.md)。
-- SVG 放入后**无需改任何 CSS**——Nico Remix 就是默认模式。
+- 路径说明：自定义属性中的相对 `url()` 在**使用**该变量时（经 `var()` 替换）才解析，基准是**使用方**样式表（`lite/theme.css`），而非声明方。本主题中两文件同处 `lite/` 目录，故两种基准结果相同；但你在**自己的** Custom CSS 里写的相对路径会相对 Jellyfin 页面解析并 404——请用绝对 URL（见上）。
 
 ### 回退与逃生口
 
-- CSS 无法检测 mask 是否加载成功（失败的 mask 会隐藏其元素——[w3c/fxtf-drafts #130](https://github.com/w3c/fxtf-drafts/issues/130)），因此"SVG 正常时隐藏 PNG"与"SVG 缺失时自动显示 PNG"**不可兼得**。remix 模式选择正确显示：SVG 缺失时 Logo 区域**为空**（不会显示 PNG）。**手动回退** = 切到 B 或 C 模式（一个块）。
-- 若个别浏览器把失败的 mask 渲染成未裁剪的实色矩形，设 `--logo-remix-color: transparent` 消除叠加层（要显示原版 PNG 还需切到 PNG 模式）。
+- **mask URL 404（SVG 缺失）：** 加载失败的 `mask-image` 会隐藏其作用元素（当前 CSS Masking 行为——[w3c/fxtf-drafts #130](https://github.com/w3c/fxtf-drafts/issues/130)）。纯 CSS 无法检测 mask 是否加载成功，因此"SVG 正常时隐藏 PNG"与"SVG 缺失时自动显示 PNG"**不可兼得**。remix 模式选择正确显示：SVG 缺失时 Logo 区域**为空**（不会显示 PNG）。**手动回退** = 切到 B 或 C 模式（一个块）。
+- **mask 为 `none`（未应用 SVG）：** 若 `--logo-mask-source` 计算为 `none`（未设置或显式设为 none）而 `--logo-remix-color` 为不透明色，叠加层**无遮罩**，会渲染成覆盖整个 Logo 区域的**未裁剪实色矩形**。这是标准行为，并非浏览器怪癖。解决办法：设 `--logo-remix-color: transparent`，**并**切到 PNG 模式（B 或 C）。
 - Logo 与配色**完全解耦**：底层读取 `--logo-base-image`（绝不读取当前配色的 `--logo`）——切换配色（包括 jellyflix）不会改变 Logo。
 
 ## 5. 可选 CSS 组件
@@ -136,7 +151,9 @@ Lite 增加两层机制：**底层**（原版 PNG，由 `--logo-base-image` 驱�
 | `bg_scroll.css` | `lite/bg_scroll.css` | 可选 | **静态兼容模块**：保留 115% 背景裁切，移除无限滚动动画 |
 | `colors/*`、`fonts/*`、`scripts/*`、`indicators.css`、`sidebar.css`、`scrollbar.css`、`card_buttons.css`、`streamberry_logo.css`、`arr-tags-links.css` | （原版直接沿用） | 按需 | 无动效/高开销，原样使用 |
 
-**启用 / 停用**：编辑 `lite/theme.css` 顶部的 `@import` 块（注释掉一行即停用）；或在 Custom CSS 里于 `lite/theme.css` 导入**之后**追加单用户导入（后导入的变量生效）。
+**启用 / 停用**：
+- **自行托管：** 编辑 `lite/theme.css` 顶部的 `@import` 块，注释掉一行即停用对应组件（`@import` 必须保持在文件顶部）。
+- **CDN 用户：** `lite/theme.css` 已内置的组件（loginpage、icontext、ratings、Logo remix）随入口导入加载，无法在 Custom CSS 中"反导入"。如需改变其表现，请在主题导入**之后**追加更高优先级的覆盖（后置规则 / `!important` 生效）。可选独立文件（`misc.css`、`slideshow.css`、`progress_bar.css`、`bg_scroll.css`、`12_fixes.css`）需要时才单独导入。
 
 ## 6. 配套脚本
 
@@ -153,7 +170,7 @@ Lite 增加两层机制：**底层**（原版 PNG，由 `--logo-base-image` 驱�
 ## 7. 兼容性
 
 - **Jellyfin**：目标版本 **10.11+**，并保留上游主题的 **Jellyfin 12** 样式支持。选择器与上游一致，兼容面与原版主题相同。
-- **浏览器**：Logo remix 使用 CSS `mask-image`（含 `-webkit-` 前缀），现代浏览器均支持；§4 的逃生口覆盖个别浏览器渲染差异。
+- **浏览器**：Logo remix 使用 CSS `mask-image`（含 `-webkit-` 前缀），现代浏览器均支持；§4 覆盖了两种失败情形（SVG 404 时区域为空、mask 为 `none` 时实色矩形）。
 - **减少动态**：保留 `prefers-reduced-motion` 兜底（如分级徽章 hover）。
 - **与原版差异（摘要）**：移除模糊、动画、`will-change` 与大辉光阴影；收窄过渡；视觉除动效/模糊外等效。完整变更清单、静态指标与验收记录：[`../AUDIT.md`](../AUDIT.md)。
 
@@ -161,11 +178,11 @@ Lite 增加两层机制：**底层**（原版 PNG，由 `--logo-base-image` 驱�
 
 | 症状 | 可能原因 / 处理 |
 |---|---|
-| 主题未生效 | 只保留**一个**入口导入（`lite/theme.css`）；目录结构（`fonts/`、`colors/`、`logos/`、`lite/`）必须完整以支持相对导入。看浏览器 Network 是否有 404，并强刷缓存。 |
-| Logo 区域为空（remix 模式） | SVG 缺失或路径错误——必须是 `lite/logos/jellyfish-remixed.svg`，**不是**仓库根 `logos/`。恢复文件，或按 §4 切到 PNG 模式（手动回退）。 |
-| Logo 显示实色矩形 | 个别浏览器把失败的 mask 渲染成未裁剪——设 `--logo-remix-color: transparent`（§4）。 |
+| 主题未生效 | 检查导入地址是否正好是 `https://cdn.jsdelivr.net/gh/mumuer1024/Jellyfish@main/lite/theme.css`，并只保留**一个**入口导入。自行托管时，目录结构（`fonts/`、`colors/`、`logos/`、`lite/`）必须完整以支持相对导入。看浏览器 Network 是否有 404，并强刷缓存。 |
+| Logo 区域为空（remix 模式） | mask SVG 缺失或其 URL 404。默认安装下必须是 `lite/logos/jellyfish-remixed.svg`（**不是**仓库根 `logos/`）。若你在 Custom CSS 里用相对 URL 覆盖了 `--logo-mask-source`，那会必然 404——请用绝对 URL（§4）。也可切到 PNG 模式作为手动回退。 |
+| Logo 显示实色矩形 | `--logo-mask-source` 计算为 `none` 而 `--logo-remix-color` 为不透明色——叠加层未遮罩。设 `--logo-remix-color: transparent` 并切到 PNG 模式（§4）。 |
 | 彩色分级显示灰色 | 未注入 `scripts/rating.js`——安装即可（§6）。未注入时灰色属预期兜底。 |
-| 切换配色无效 | 单用户覆盖必须在 `lite/theme.css` **之后**导入（§3.2）；动态下拉脚本指向上游 CDN（§3.3）。 |
+| 切换配色无效 | 覆盖必须在 `lite/theme.css` **之后**导入（§3.1）；动态下拉脚本指向上游 CDN（§3.3）。 |
 | 字体 / 图标 404 | 相对导入需要周边目录；自托管时 `fonts/`（woff2）需正确 MIME（`font/woff2`），跨域时配好 CORS 头。 |
 | 详情内容区有深色底块 | 半透明色块（`--secondary-background-transparent`，20% 主色）是**原版既有设计**（叠加 Jellyfin 基础样式），Lite 与原版一致，经决定保留。 |
 | 还能看到原版特效 | 只导入 `lite/` 的 URL——不要混入根目录的 `theme.css`（未优化版）。 |
