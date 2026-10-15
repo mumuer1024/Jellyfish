@@ -45,9 +45,12 @@
    (logo mode switch + paths). The consuming element rules live in the override
    block at the END of this file (imported stylesheets are processed before
    this file's own rules, so element rules cannot win the cascade from here).
-   Safe fallback: while lite/logos/jellyfish-remixed.svg is missing, the
-   failing mask-image hides only the overlay and the original PNG stays
-   visible — no blank logo. See lite/logo-remix.css and lite/logos/README.md. */
+   Remix mode hides the original PNG by design (--logo-base-image: none), so
+   while lite/logos/jellyfish-remixed.svg is missing the logo area is empty —
+   there is no automatic PNG fallback (CSS cannot detect a failed mask, see
+   w3c/fxtf-drafts #130); the manual fallback is to switch to the
+   Jellyfish/Streamberry PNG mode in lite/logo-remix.css. See
+   lite/logo-remix.css and lite/logos/README.md. */
 @import url("logo-remix.css");
 
 /* ~~~~~~~~~~~~~~~~~~~~ GLOBAL CSS VARIABLES ~~~~~~~~~~~~~~~~~~~~ */
